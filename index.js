@@ -41,7 +41,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //Write your code here//
 
 //CHALLENGE 1: GET All posts
-
+  app.get("/posts",(req,res)=>{
+    console.log(req);
+    res.send(posts);
+  });
 //CHALLENGE 2: GET a specific post by id
 
 //CHALLENGE 3: POST a new post
