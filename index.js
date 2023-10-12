@@ -42,20 +42,56 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //CHALLENGE 1: GET All posts
   app.get("/posts",(req,res)=>{
-    console.log(req);
     res.send(posts);
   });
 //CHALLENGE 2: GET a specific post by id
-app.get("posts/:id",(req,res)=>{
-  id = parseInt(req.params.id);
-  const post = posts.find((value)=>{value.id===id});
+app.get("/posts/:id",(req,res)=>{
+  
+  const id = parseInt(req.params.id);
+  const post = posts.find((value)=>value.id===id);
   res.send(post);
 });
 //CHALLENGE 3: POST a new post
+app.post("/posts",(req,res)=>{
+  const post = {id:(lastId+1),title:req.body.title,content:req.body.content,author:req.body.author,date: new Date()};
+  posts.push(post);
+  lastId++;
+  res.send(post);
+});
 
 //CHALLENGE 4: PATCH a post when you just want to update one parameter
+app.patch("/posts/:id",(req,res)=>{
+  const id = parseInt(req.params.id);
+  const oldPost = posts.find((value)=>value.id===id); 
+  if(oldPost){
+    console.log(req.body);
+    const title = req.body.title || oldPost.title;
+    const content = req.body.content || oldPost.content;
+    const author = req.body.author || oldPost.author;
+
+    const post = {id:id,title:title,content:content,author:author,date:(new Date()),};
+    const index = posts.findIndex((value)=>value===oldPost);
+    posts[index] = post;
+    res.send(post);
+  }else{
+    res.sendStatus(404).json({error:`unable to edit`})
+  }
+  
+
+});
 
 //CHALLENGE 5: DELETE a specific post by providing the post id.
+app.delete("/posts/:id",(req,res)=>{
+  const id = parseInt(req.params.id);
+  const oldPost = posts.find((value)=>value.id===id); 
+  if(oldPost){
+    const index = posts.findIndex((value)=>value===oldPost);
+    posts.splice(index,1);
+    res.sendStatus(200);
+  }else{
+    res.status(404).json({error:"not deleted"});
+  }
+});
 
 app.listen(port, () => {
   console.log(`API is running at http://localhost:${port}`);
