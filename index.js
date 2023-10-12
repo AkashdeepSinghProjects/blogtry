@@ -46,7 +46,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
     res.send(posts);
   });
 //CHALLENGE 2: GET a specific post by id
-
+app.get("posts/:id",(req,res)=>{
+  id = parseInt(req.params.id);
+  const post = posts.find((value)=>{value.id===id});
+  res.send(post);
+});
 //CHALLENGE 3: POST a new post
 
 //CHALLENGE 4: PATCH a post when you just want to update one parameter
